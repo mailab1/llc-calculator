@@ -27,6 +27,31 @@ explore the design space interactively.
 This tool has been validated against two published reference LLC converter designs, 
 matching their resonant-tank component values and ZVS boundaries to within 0.2%.
 
+
+## MATLAB GUI and Simulink Models
+
+In addition to the browser-based calculator, this project includes a MATLAB graphical user interface (GUI) for LLC resonant converter design and dedicated Simulink models for both half-bridge and full-bridge LLC converter topologies.
+
+### Features
+- **MATLAB GUI Calculator:** Calculate and explore LLC resonant-tank design parameters through an interactive graphical interface.
+- **Half-Bridge LLC Converter:** Simulink model for simulation and analysis of the half-bridge topology.
+- **Full-Bridge LLC Converter:** Simulink model for simulation and analysis of the full-bridge topology.
+- **Design and Simulation:** Use the GUI for converter design calculations and the Simulink models for time-domain simulation and verification.
+
+### Compatibility
+- **MATLAB/Simulink Version:** R2024a (MATLAB 2024a).
+- The Simulink models were created using MATLAB/Simulink R2024a. Compatibility with earlier releases is not guaranteed.
+- For the best experience, open the GUI and Simulink models in MATLAB/Simulink R2024a or a compatible newer release.
+
+### Usage
+1. Download or clone this repository.
+2. Open MATLAB R2024a or a compatible newer version.
+3. Open the MATLAB GUI application and enter the desired converter design specifications.
+4. Open the corresponding half-bridge or full-bridge Simulink model to simulate the converter.
+
+**Note:** MATLAB and Simulink are required to use the MATLAB GUI and simulation models. The browser-based calculator remains available independently and requires only a modern web browser.
+
+
 ## Citation
 If you use this tool in your research, please cite:
 ## Citation
