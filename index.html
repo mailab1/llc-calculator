@@ -1413,7 +1413,7 @@ var Basic=buildCalc({pfx:'basic',title:'LLC Calculator · FHA',bridge:true,nMode
       met('','Fpeak (gain peak)',fmt(S.Fpeak,4),'')+met((S.Fop>S.Fzvs?'ok':'bad'),'Fzvs floor (Im Zin=0)',fmt(S.Fzvs,4),'')+met('c4','fsw @Vin_min',fmt(S.fsw_op,1),'kHz')+
       met('c4','fsw @Vin_nom ('+fmt(S.vinnom,0)+'V, sim corner)',fmt(S.fsw_atnom,1),'kHz')+
       met((S.dt>=S.tdead_nl&&S.energyOK?'ok':'bad'),'Dead time needed for ZVS',fmt(S.tdead_nl*1e9,0),'ns')+
-      met('c2','Q vs the ZVS limit Qmax',fmt(S.Q,2)+' / '+fmt(S.Qmax_zvs,2),(S.Q<=S.Qmax_zvs?'ok':'over'))+
+      met('c2','Q vs the ZVS limit Qmax',fmt(S.Q,3)+' / '+fmt(S.Qmax_zvs,3),(S.Q<=S.Qmax_zvs?'ok':'over'))+
       met('c2 w','Primary RMS · secondary RMS',fmt(S.Ipri_rms,2)+' / '+fmt(S.Isec_rms,1),'A');
     finishCalc(ST,S,[['—— method',''],['Topology','Kb',ST.bridge==='hb'?'Half-bridge (0.5)':'Full-bridge (1.0)']]);
   }
