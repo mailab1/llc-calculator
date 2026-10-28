@@ -1378,7 +1378,7 @@ var Basic=buildCalc({pfx:'basic',title:'LLC Calculator · FHA',bridge:true,nMode
     {id:'basic-po',label:'Po — output power (W)',min:20,max:8000,step:1,val:192,cls:'tk-amber'},
     {id:'basic-fr',label:'fr — resonant freq (kHz)',min:20,max:500,step:1,val:100,hint:'Higher fr shrinks the magnetics but raises switching and core loss.'},
     {id:'basic-m',label:'m = (Lr+Lm)/Lr',min:2,max:15,step:0.01,val:5,cls:'tk-violet',hint:'Your main design knob. Lower m boosts gain and ZVS margin at the cost of circulating current.'},
-    {id:'basic-q',label:'Q — quality factor',min:0.05,max:1.5,step:0.01,val:0.40,hint:'Higher Q flattens the peak and reduces boost margin.'},
+    {id:'basic-q',label:'Q — quality factor',min:0.05,max:1.5,step:0.001,val:0.40,hint:'Higher Q flattens the peak and reduces boost margin.'},
     {id:'basic-coss',label:'MOSFET output capacitance (pF)',min:50,max:5000,step:10,val:350,cls:'tk-blue'},
     {id:'basic-dt',label:'Dead time (ns)',min:50,max:2000,step:5,val:450,cls:'tk-blue'},
     {id:'basic-resr',label:'Resr — series R, gain ceiling (mΩ)',min:0,max:5000,step:10,val:0,cls:'tk-red',hint:'Appears in the damped gain curve (dotted); it does not resize the tank.'}],
