@@ -234,7 +234,7 @@
           <p>Every slider in the tool affects the result, but only <b>m</b> and <b>Q</b> are genuine design degrees of freedom. Everything else is a specification.</p>
           <div class="eqblock">
             <div class="eqrow"><span class="eqlhs"><i>m</i></span><span class="eqeq">=</span><span class="eqrhs">(L<sub>r</sub>+L<sub>m</sub>) / L<sub>r</sub></span><span class="eqann">inductance ratio — the main design knob</span></div>
-            <div class="eqrow"><span class="eqlhs"><i>Q</i></span><span class="eqeq">=</span><span class="eqrhs">Z<sub>r</sub> / R<sub>ac</sub></span><span class="eqann">quality factor — set by the load, not by you</span></div>
+            <div class="eqrow"><span class="eqlhs"><i>Q</i></span><span class="eqeq">=</span><span class="eqrhs">Z<sub>r</sub> / R<sub>ac</sub></span><span class="eqann">quality factor — your design knob; Zr = Q·Rac is solved from it</span></div>
           </div>
           <p style="font-size:12.5px;margin-top:8px"><b>Low m</b> = tall gain peak, easy ZVS, wide frequency range, high circulating current. <b>High m</b> = efficient, narrow frequency range, gain-starved. Practical designs land at m ≈ 4–8. Start at 6 and iterate.</p>
           <p style="font-size:12.5px"><b>Low Q</b> = taller gain peak, lower-impedance tank, more boost headroom. <b>High Q</b> = peak drops, frequency range widens, gain margin tightens. Q is set by your load via R<sub>ac</sub> = (8/π²)·n²·V<sub>o</sub>²/P<sub>o</sub> — it is not a free knob, it follows from the spec.</p>
