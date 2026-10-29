@@ -234,7 +234,7 @@
           <p>Every slider in the tool affects the result, but only <b>m</b> and <b>Q</b> are genuine design degrees of freedom. Everything else is a specification.</p>
           <div class="eqblock">
             <div class="eqrow"><span class="eqlhs"><i>m</i></span><span class="eqeq">=</span><span class="eqrhs">(L<sub>r</sub>+L<sub>m</sub>) / L<sub>r</sub></span><span class="eqann">inductance ratio — the main design knob</span></div>
-            <div class="eqrow"><span class="eqlhs"><i>Q</i></span><span class="eqeq">=</span><span class="eqrhs">Z<sub>r</sub> / R<sub>ac</sub></span><span class="eqann">quality factor — your design knob; Zr = Q·Rac is solved from it</span></div>
+            <div class="eqrow"><span class="eqlhs"><i>Q</i></span><span class="eqeq">=</span><span class="eqrhs">Z<sub>r</sub> / R<sub>ac</sub></span><span class="eqann">quality factor — set by the load, not by you</span></div>
           </div>
           <p style="font-size:12.5px;margin-top:8px"><b>Low m</b> = tall gain peak, easy ZVS, wide frequency range, high circulating current. <b>High m</b> = efficient, narrow frequency range, gain-starved. Practical designs land at m ≈ 4–8. Start at 6 and iterate.</p>
           <p style="font-size:12.5px"><b>Low Q</b> = taller gain peak, lower-impedance tank, more boost headroom. <b>High Q</b> = peak drops, frequency range widens, gain margin tightens. Q is set by your load via R<sub>ac</sub> = (8/π²)·n²·V<sub>o</sub>²/P<sub>o</sub> — it is not a free knob, it follows from the spec.</p>
@@ -523,9 +523,9 @@ function drawGain(pfx,S){
     for(var i2=0;i2<=460;i2++){var f2=fMin+i2*(fMax-fMin)/460,Fn2=f2/S.fr_k,h2=Hs(Fn2,S.Q,S.m,S.sc,S.resrN),xx2=xf(f2),yy2=yg(h2);
       if(yy2<pad.t-6||yy2>pad.t+ph+6){st2=false;continue;}if(!st2){x.moveTo(xx2,yy2);st2=true;}else x.lineTo(xx2,yy2);}
     x.stroke();x.setLineDash([]);}
-  document.getElementById(pfx+'-scope-tag').textContent='m='+fmt(S.m,2)+'  Q='+fmt(S.Q,2)+(S.sc>1.001?'  M@fr='+fmt(S.sc,3):'')+'  fr='+S.fr_k+'k';
+  document.getElementById(pfx+'-scope-tag').textContent='m='+fmt(S.m,2)+'  Q='+fmt(S.Q,3)+(S.sc>1.001?'  M@fr='+fmt(S.sc,3):'')+'  fr='+S.fr_k+'k';
   var leg=document.getElementById(pfx+'-leg-gain');
-  leg.innerHTML='<div class="li"><span class="sw" style="background:'+CO.primary+';height:4px"></span><b>Q='+fmt(S.Q,2)+' — your design</b></div>'+
+  leg.innerHTML='<div class="li"><span class="sw" style="background:'+CO.primary+';height:4px"></span><b>Q='+fmt(S.Q,3)+' — your design</b></div>'+
     QCURVES.map(function(q,i){return '<div class="li"><span class="sw" style="background:'+qcol(i,QCURVES.length)+';opacity:.5"></span>Q='+q+'</div>';}).join('')+
     '<div class="li"><span class="sw" style="background:'+CO.req+'"></span>required gain</div><div class="li"><span class="sw" style="background:'+CO.floor+'"></span>peak gain (Fpeak)</div>'+
     '<div class="li"><span class="sw" style="background:'+CO.red+'"></span>true ZVS floor (Im Zin=0)</div>'+
@@ -926,7 +926,7 @@ function buildCalc(C){
     op:'<b>What am I looking at?</b> Where the converter actually settles at each input voltage. Every marker must sit inside the green band.',
     tdw:'<b>What am I looking at?</b> The real, simulated steady-state waveforms of the tank you just sized — not a formula. Use these for peak and RMS current, and for the capacitor voltage rating.',
     plane:'<b>What am I looking at?</b> Capacitor voltage plotted against inductor current over one period. A closed, centred loop means a genuine periodic steady state. Fatter loop = more circulating energy for the same output.',
-    zvs:'<b>What am I looking at?</b> How the ZVS margin changes as you vary the inductance ratio m, with everything else held fixed. Stay where the amber curve (dead time needed) is below the green line (dead time you have).',
+    zvs:'<b>What am I looking at?</b> How the ZVS margin changes as you vary the inductance ratio m, with everything else held fixed. Stay where the amber curve (dead time needed) is below the green line (dead time you have). The dead time shown here is evaluated at no load at the operating switching frequency; the tile and row labelled "@ Fmax=1.5·fr" repeat the same check at the assumed controller ceiling frequency (1.5× the resonant frequency, the worst case for magnetizing current and hence the hardest ZVS corner) — both should stay ✓ with margin to spare. Neither figure includes the roughly 29 ns gate-driver pull-down delay or the extra ~50 ns margin some vendors add on top of the calculated charge time (see Infineon AN_1907, Code Listing 9–10); add those separately if you need a number to compare against a datasheet dead-time setting.',
     feas:'<b>What am I looking at?</b> Every combination of Q and m for this specification, tested against all three pass criteria. Green passes. Aim for the middle of the green region, not its edge.',
     tbl:'<b>What am I looking at?</b> Every computed quantity, with the formula that produced it. Use the CSV button on the left to export it.'
   };
@@ -1082,6 +1082,7 @@ function commonRows(S){return [
   ['Node charge','2·Coss·Vin,max',fmt(2*S.Qoss*1e9,1)+' nC'],
   ['Dead time needed — full load','tZVS=2·Coss·Vin/ILm  (AND90061 eq.43)',fmt(S.tdead*1e9,1)+' ns'],
   ['Dead time needed — no load','same, with ILm=n(Vo+Vf)/(4·Lp·f)  (Infineon CL9)',fmt(S.tdead_nl*1e9,1)+' ns'],
+  ['Dead time needed — no load at Fmax = 1.5·fr','ILm=n(Vo+Vf)/(4·Lp·Fmax)  (Infineon CL9)',fmt(S.tdead_fmax*1e9,1)+' ns @ '+fmt(S.Fmax_k,0)+' kHz '+(S.zvsFmaxOK?'✓':'✗')],
   ['Dead time available','slider',fmt(S.dt*1e9,0)+' ns'],
   ['ZVS energy check','½Lp·I² vs ½·2Coss·Vin²  (Infineon CL8)',fmt(S.E_ind*1e6,1)+' / '+fmt(S.E_cap*1e6,1)+' µJ '+(S.energyOK?'✓':'✗')],
   ['—— cross-checks against the application notes','',''],
@@ -1125,7 +1126,9 @@ function finishCalc(ST,S,extraRows){
   verdict(ST.pfx+'-verdict',(gainOK&&zvs&&ind)?'pass':(gainMarg&&zvsMarg&&ind)?'marg':'fail',
     (gainOK&&zvs&&ind)?'Design feasible':!ind?'Not feasible — capacitive at V₁ₙ,ₘᵢₙ':(gainMarg&&zvsMarg)?'Marginal — add margin':'Not feasible',
     'gain '+(gainOK?'✓':(gainMarg?'△':'✗'))+' '+fmt(Gp/S.Mreq_min,3)+'× ('+fmt(Gp,3)+' vs '+fmt(S.Mreq_min,3)+' needed; 1.05× for green) · ZVS '+(zvs?'✓':'✗')+' '+fmt(S.dt/Math.max(tdReq,1e-12),1)+'× (need '+fmt(tdReq*1e9,0)+'ns at no load, '+fmt(S.tdead*1e9,0)+'ns at full load; have '+fmt(S.dt*1e9,0)+'ns)'+
-    (S.energyOK?'':' · <b>energy fails</b>')+' · region '+
+    (S.energyOK?'':' · <b>energy fails</b>')+
+    ' · ZVS @Fmax=1.5·fr '+(S.zvsFmaxOK?'✓':'✗')+' '+fmt(S.dt/Math.max(S.tdead_fmax,1e-12),2)+'× (need '+fmt(S.tdead_fmax*1e9,0)+'ns)'+
+    ' · region '+
     (ind?'inductive ✓':'CAPACITIVE ✗ (Fop '+fmt(S.Fop,3)+' ≤ ZVS floor '+fmt(S.Fzvs,3)+')')+fhaCaution);
   document.getElementById(ST.pfx+'-cross').textContent='fsw@Vin_min ≈ '+fmt(S.fsw_op,0)+' kHz';
   var rows=(extraRows||[]).concat(commonRows(S));ST.rows=rows;
@@ -1319,6 +1322,12 @@ function addDynamics(S){
   S.E_ind=0.5*S.Lp*S.ILm_nl*S.ILm_nl;
   S.E_cap=0.5*(2*S.Coss)*S.Vsw_max*S.Vsw_max;
   S.energyOK=S.E_ind>=S.E_cap;
+  /* No-load worst case at the assumed controller ceiling Fmax = 1.5*fr (Infineon CL8/CL9 use Fmax=150k for fr=100k) */
+  S.Fmax_k=1.5*S.fr_k;
+  S.ILm_fmax=S.Vclamp/(4*S.Lp*1.5*S.fr);
+  S.tdead_fmax=zvsTime(S.Vsw_max,S.ILm_fmax,S.Coss);
+  S.energyOK_fmax=(0.5*S.Lp*S.ILm_fmax*S.ILm_fmax)>=S.E_cap;
+  S.zvsFmaxOK=(S.dt>=S.tdead_fmax)&&S.energyOK_fmax;
 
   /* Infineon Code Listing 3 gives the ZVS-boundary Q in CLOSED FORM. The tool
      finds the boundary numerically by bisecting Im(Zin)=0; this is a completely
@@ -1379,7 +1388,7 @@ var Basic=buildCalc({pfx:'basic',title:'LLC Calculator · FHA',bridge:true,nMode
     {id:'basic-fr',label:'fr — resonant freq (kHz)',min:20,max:500,step:1,val:100,hint:'Higher fr shrinks the magnetics but raises switching and core loss.'},
     {id:'basic-m',label:'m = (Lr+Lm)/Lr',min:2,max:15,step:0.01,val:5,cls:'tk-violet',hint:'Your main design knob. Lower m boosts gain and ZVS margin at the cost of circulating current.'},
     {id:'basic-q',label:'Q — quality factor',min:0.05,max:1.5,step:0.001,val:0.40,hint:'Higher Q flattens the peak and reduces boost margin.'},
-    {id:'basic-coss',label:'MOSFET output capacitance (pF)',min:50,max:5000,step:10,val:350,cls:'tk-blue'},
+    {id:'basic-coss',label:'MOSFET output capacitance (pF)',min:10,max:5000,step:1,val:350,cls:'tk-blue'},
     {id:'basic-dt',label:'Dead time (ns)',min:50,max:2000,step:5,val:450,cls:'tk-blue'},
     {id:'basic-resr',label:'Resr — series R, gain ceiling (mΩ)',min:0,max:5000,step:10,val:0,cls:'tk-red',hint:'Appears in the damped gain curve (dotted); it does not resize the tank.'}],
   compute:function(ST){
@@ -1413,6 +1422,7 @@ var Basic=buildCalc({pfx:'basic',title:'LLC Calculator · FHA',bridge:true,nMode
       met('','Fpeak (gain peak)',fmt(S.Fpeak,4),'')+met((S.Fop>S.Fzvs?'ok':'bad'),'Fzvs floor (Im Zin=0)',fmt(S.Fzvs,4),'')+met('c4','fsw @Vin_min',fmt(S.fsw_op,1),'kHz')+
       met('c4','fsw @Vin_nom ('+fmt(S.vinnom,0)+'V, sim corner)',fmt(S.fsw_atnom,1),'kHz')+
       met((S.dt>=S.tdead_nl&&S.energyOK?'ok':'bad'),'Dead time needed for ZVS',fmt(S.tdead_nl*1e9,0),'ns')+
+      met((S.zvsFmaxOK?'ok':'bad'),'Dead time needed @ Fmax=1.5·fr, no load',fmt(S.tdead_fmax*1e9,0),'ns')+
       met('c2','Q vs the ZVS limit Qmax',fmt(S.Q,3)+' / '+fmt(S.Qmax_zvs,3),(S.Q<=S.Qmax_zvs?'ok':'over'))+
       met('c2 w','Primary RMS · secondary RMS',fmt(S.Ipri_rms,2)+' / '+fmt(S.Isec_rms,1),'A');
     finishCalc(ST,S,[['—— method',''],['Topology','Kb',ST.bridge==='hb'?'Half-bridge (0.5)':'Full-bridge (1.0)']]);
