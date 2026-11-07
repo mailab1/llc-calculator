@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite the following paper."
+title: "LLC Resonant Converter Design Calculator"
+authors:
+  - family-names: "Diab"
+    given-names: "Mai"
+version: 1.0.0
+date-released: 2026-12-06
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: "Diab"
+      given-names: "Mai"
+  title: "An Interactive Web-Based LLC Resonant Converter Design and Verification Tool"
+  collection-title: "Proceedings of the 36th International Conference on Computer Theory and Applications (ICCTA)"
+  location:
+    city: Alexandria
+    country: Egypt
+  month: 12
+  year: 2026
