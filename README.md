@@ -53,8 +53,7 @@ In addition to the browser-based calculator, this project includes a MATLAB grap
 
 
 ## Citation
-If you use this tool in your research, please cite:
-## Citation
+
 If you use this tool in your research, please cite:
 
 M. Diab, "An Interactive Web-Based LLC Resonant Converter Design and Verification 
